@@ -1,13 +1,9 @@
 package com.example.socksstyorageapp.controller;
 
-import com.example.socksstyorageapp.exception.WrongCottonPartException;
-import com.example.socksstyorageapp.exception.WrongQuantityException;
 import com.example.socksstyorageapp.model.Socks;
 import com.example.socksstyorageapp.operation.OperationsEnum;
 import com.example.socksstyorageapp.repository.SocksRepository;
-import com.example.socksstyorageapp.service.SocksService;
 import com.example.socksstyorageapp.service.impl.SocksServiceImpl;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -18,14 +14,13 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest

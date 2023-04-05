@@ -13,12 +13,22 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class SocksServiceImpl implements SocksService {
     private final SocksRepository socksRepository;
-
+    /**
+     * Adds socks to the storage.
+     * If there are already socks with the same color and cottonPart in the storage, the quantity
+     * of the existing socks is increased by the quantity of the new socks being added.
+     *
+     * @param socks The Socks object to add to the storage.
+     * @return The saved Socks object.
+     * @throws WrongQuantityException if the quantity of socks to add is less than 1.
+     * @throws WrongCottonPartException if the cotton part of the socks is not within the valid range of 0 to 100.
+     */
     @Override
     public Socks addSocks(Socks socks) throws WrongQuantityException, WrongCottonPartException {
         log.info("Add socks in storage method was invoked: {}", socks );
@@ -47,6 +57,14 @@ public class SocksServiceImpl implements SocksService {
         }
     }
 
+    /**
+     * Removes socks from the storage.
+     *
+     * @param socks The Socks object to remove from the storage.
+     * @return The saved Socks object.
+     * @throws NotFoundException if the socks to remove are not found in the storage.
+     * @throws WrongRemoveQuantityException if the quantity of socks to remove is greater than the quantity in storage.
+     */
     @Override
     public Socks removeSocks(Socks socks) throws NotFoundException, WrongRemoveQuantityException {
         log.info("Remove socks from storage method was invoked: {}", socks);
@@ -65,6 +83,21 @@ public class SocksServiceImpl implements SocksService {
             }
     }
 
+    /**
+     * Returns the total quantity of socks in the storage based on the given color and/or
+     * cotton part and operation.
+     * If color is null, the total quantity of all socks in the storage is returned.
+     * If cottonPart and operation are null, the total quantity of socks with the given color
+     * is returned.
+     * If cottonPart and operation are not null, the total quantity of socks with the given
+     * color and that meet the criteria of the operation is returned.
+     *
+     * @param color The color of the socks to include in the total quantity. If null, all socks are included.
+     * @param operation The operation to apply to the cotton part of the socks. If null, cotton part is not considered.
+     * @param cottonPart The cotton part of the socks to apply the operation to. If null, cotton part is not considered.
+     * @return The total quantity of socks in the storage based on the given criteria.
+     * @throws WrongCottonPartException if the cotton part is not within the valid range of 0 to 100.
+     */
     @Override
     public int getSocksList(
             String color, OperationsEnum operation, Integer cottonPart) throws WrongCottonPartException {
@@ -77,6 +110,7 @@ public class SocksServiceImpl implements SocksService {
             socksList = socksRepository.findAll();
         }
 
+
         if (cottonPart != null && operation != null) {
             if (operation.equals(OperationsEnum.LESSTHAN)) {
                 socksList = socksRepository.findAllByCottonPartLessThan(cottonPart);
@@ -85,7 +119,7 @@ public class SocksServiceImpl implements SocksService {
             } else if (operation.equals(OperationsEnum.EQUALS)) {
                 socksList = socksRepository.findAllByCottonPart(cottonPart);
             }
-            else if(cottonPart >100) {
+             if(cottonPart >100) {
                 throw new WrongCottonPartException("CottonPart must be between 0 and 100");
             }
         }
