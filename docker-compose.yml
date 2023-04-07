@@ -1,0 +1,22 @@
+version: '3'
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - spring.datasource.url=jdbc:postgresql://db/SocksStorage
+      - spring.datasource.username=EvgenyFisenkoJava
+      - spring.datasource.password=CT8B3DJMdHcb
+  db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_DB=SocksStorage
+      - POSTGRES_USER=EvgenyFisenkoJava
+      - POSTGRES_PASSWORD=CT8B3DJMdHcb
+    volumes:
+      - db_data:/var/lib/postgresql/data
+volumes:
+  db_data:
